@@ -3,15 +3,18 @@
 import { useEffect, useState } from "react";
 import { usePathname } from "next/navigation";
 
-export function SiteLoader() {
+export function SiteLoader({
+  associationName = "4L CHAPEAU",
+  message = "On prend la route",
+}: {
+  associationName?: string;
+  message?: string;
+}) {
   const pathname = usePathname();
   const [phase, setPhase] = useState<"running" | "leaving">("running");
 
   useEffect(() => {
-    if (pathname?.startsWith("/admin")) {
-      setPhase("leaving");
-      return;
-    }
+    if (pathname?.startsWith("/admin")) return;
 
     const key = "4l-chapeau-loader-seen";
     const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
@@ -29,12 +32,12 @@ export function SiteLoader() {
 
   return (
     <div className={`site-loader site-loader-${phase}`} aria-hidden="true">
-      <p className="loader-title">4L CHAPEAU</p>
+      <p className="loader-title">{associationName}</p>
       <div className="loader-road">
         <span className="loader-road-line" />
         <img className="loader-car" src="/images/4l-loader-car.png" alt="" />
       </div>
-      <p className="loader-copy">On prend la route</p>
+      <p className="loader-copy">{message}</p>
     </div>
   );
 }

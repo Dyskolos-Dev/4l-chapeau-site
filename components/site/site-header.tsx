@@ -1,29 +1,39 @@
 "use client";
 
+import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
+import { DonationTrigger } from "@/components/site/donation-dialog";
+import type { SiteSettings } from "@/lib/content";
 import { cn } from "@/lib/utils";
 
-const navigation = [
-  { href: "/", label: "Accueil" },
-  { href: "/le-projet", label: "L’association" },
-  { href: "/4l-trophy", label: "4L Trophy" },
-  { href: "/evenements", label: "Événements" },
-  { href: "/actualites", label: "Actualités" },
-  { href: "/galerie", label: "Galerie" },
-];
+type Props = {
+  navigationLabels?: SiteSettings["navigation"];
+  associationName?: string;
+  brandMark?: string;
+};
 
-export function SiteHeader() {
+export function SiteHeader({
+  navigationLabels,
+  associationName = "4L CHAPEAU",
+  brandMark = "4L",
+}: Props) {
   const pathname = usePathname();
-  const [isOpen, setIsOpen] = useState(false);
-
-  useEffect(() => {
-    setIsOpen(false);
-  }, [pathname]);
+  const activePathname = pathname ?? "/";
+  const [openMenuPath, setOpenMenuPath] = useState<string | null>(null);
+  const isOpen = openMenuPath === activePathname;
+  const navigation = [
+    { href: "/", label: navigationLabels?.home ?? "Accueil" },
+    { href: "/le-projet", label: navigationLabels?.association ?? "L’association" },
+    { href: "/4l-trophy", label: navigationLabels?.trophy ?? "4L Trophy" },
+    { href: "/evenements", label: navigationLabels?.events ?? "Événements" },
+    { href: "/actualites", label: navigationLabels?.news ?? "Actualités" },
+    { href: "/galerie", label: navigationLabels?.gallery ?? "Galerie" },
+  ];
 
   useEffect(() => {
     const closeOnEscape = (event: KeyboardEvent) => {
-      if (event.key === "Escape") setIsOpen(false);
+      if (event.key === "Escape") setOpenMenuPath(null);
     };
 
     document.addEventListener("keydown", closeOnEscape);
@@ -35,37 +45,47 @@ export function SiteHeader() {
     };
   }, [isOpen]);
 
+  const isActive = (href: string) =>
+    href === "/" ? pathname === href : Boolean(pathname?.startsWith(href));
+
+  const closeMenu = () => setOpenMenuPath(null);
+  const toggleMenu = () => {
+    setOpenMenuPath((openPath) => (openPath === activePathname ? null : activePathname));
+  };
+
   return (
     <header className="nova-header">
+      <a className="nova-skip-link" href="#main-content">
+        Aller au contenu
+      </a>
       <div className="nova-header-inner">
-        <a className="nova-brand" href="/" onClick={() => setIsOpen(false)}>
-          <span className="nova-brand-mark">4L</span>
-          <span>CHAPEAU</span>
-        </a>
+        <Link className="nova-brand" href="/" onClick={closeMenu}>
+          <span className="nova-brand-mark">{brandMark || "4L"}</span>
+          <span>{associationName}</span>
+        </Link>
 
         <nav className="nova-nav" aria-label="Navigation principale">
           {navigation.map((item) => (
-            <a
-              className={cn(pathname === item.href && "is-active")}
+            <Link
+              aria-current={isActive(item.href) ? "page" : undefined}
+              className={cn(isActive(item.href) && "is-active")}
               href={item.href}
               key={item.href}
             >
               {item.label}
-            </a>
+            </Link>
           ))}
         </nav>
 
         <div className="nova-header-actions">
-          <a className="nova-support-cta" href="/soutenir">
-            Nous soutenir
-          </a>
+          <DonationTrigger className="nova-support-cta" fallbackHref="/soutenir" />
           <button
             className={cn("nova-menu-button", isOpen && "is-open")}
             type="button"
             aria-label={isOpen ? "Fermer le menu" : "Ouvrir le menu"}
             aria-expanded={isOpen}
             aria-controls="mobile-navigation"
-            onClick={() => setIsOpen((open) => !open)}
+            onClick={toggleMenu}
           >
             <span />
             <span />
@@ -73,20 +93,29 @@ export function SiteHeader() {
         </div>
       </div>
 
-      <nav
-        className={cn("nova-mobile-menu", isOpen && "is-open")}
-        id="mobile-navigation"
-        aria-label="Navigation mobile"
-      >
-        {navigation.map((item) => (
-          <a href={item.href} key={item.href} onClick={() => setIsOpen(false)}>
-            {item.label}
-          </a>
-        ))}
-        <a className="nova-mobile-support" href="/soutenir" onClick={() => setIsOpen(false)}>
-          Soutenir l’aventure
-        </a>
-      </nav>
+      {isOpen ? (
+        <nav
+          className="nova-mobile-menu is-open"
+          id="mobile-navigation"
+          aria-label="Navigation mobile"
+        >
+          {navigation.map((item) => (
+            <Link
+              aria-current={isActive(item.href) ? "page" : undefined}
+              href={item.href}
+              key={item.href}
+              onClick={closeMenu}
+            >
+              {item.label}
+            </Link>
+          ))}
+          <DonationTrigger
+            className="nova-mobile-support"
+            fallbackHref="/soutenir"
+            onClick={closeMenu}
+          />
+        </nav>
+      ) : null}
     </header>
   );
 }

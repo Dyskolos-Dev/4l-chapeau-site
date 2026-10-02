@@ -417,6 +417,7 @@ img { display: block; max-width: 100%; }
 .admin-topbar-actions { display: flex; gap: 14px; align-items: center; padding-top: 4px; }
 .admin-public-link { border-bottom: 2px solid var(--red); padding-bottom: 3px; color: var(--blue); font-size: .67rem; font-weight: 900; letter-spacing: .07em; text-transform: uppercase; }
 .admin-user { max-width: 240px; overflow: hidden; color: var(--muted); font-size: .75rem; text-overflow: ellipsis; white-space: nowrap; }
+.admin-logout { border: 0; border-bottom: 2px solid var(--red); padding: 0 0 3px; background: transparent; color: var(--blue); font-family: inherit; font-size: .67rem; font-weight: 900; letter-spacing: .07em; text-transform: uppercase; cursor: pointer; }
 .admin-stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; margin-bottom: 22px; }
 .admin-stat { display: grid; min-height: 122px; align-content: space-between; gap: 12px; padding: 17px; border-radius: 8px; background: #fff; box-shadow: 0 5px 15px rgb(19 38 75 / 5%); }
 .admin-stat:nth-child(2) { border-top: 4px solid var(--red); }
@@ -672,8 +673,25 @@ body { min-width: 320px; background: var(--nova-paper); color: var(--nova-ink); 
 .nova-button-outline-light { border-color: rgb(255 255 255 / 72%); color: #fff; }
 .nova-text-link { display: inline-flex; width: fit-content; border-bottom: 2px solid currentColor; padding-bottom: 3px; color: var(--nova-red); font-size: .9375rem; font-weight: 750; }
 .nova-text-link-light { color: #fff; }
+.nova-donation-trigger { border: 0; font: inherit; cursor: pointer; }
+.nova-action-pair { display: flex; flex-wrap: wrap; align-items: center; gap: 18px; }
+.nova-support-donation-cta { margin-top: 26px; }
 .motion-reveal { opacity: 0; transform: translateY(18px); transition: opacity .45s ease var(--reveal-delay, 0ms), transform .45s cubic-bezier(.2,.7,.25,1) var(--reveal-delay, 0ms); }
 .motion-reveal.is-visible { opacity: 1; transform: translateY(0); }
+
+/* HelloAsso donation dialog. Keep it above the sticky navigation and reserve
+   scrolling for the form itself, so the payment flow remains usable on mobile. */
+[data-slot="dialog-overlay"] { z-index: 1100 !important; }
+[data-slot="dialog-content"].nova-donation-dialog { z-index: 1101 !important; display: grid; grid-template-rows: auto minmax(0, 1fr) auto; width: min(calc(100vw - 24px), 34rem); max-width: 34rem; max-height: calc(100dvh - 24px); gap: 0; overflow: hidden; border: 1px solid rgb(20 43 74 / 16%); border-radius: 13px; padding: 0 !important; background: #fff; box-shadow: 0 28px 80px rgb(10 25 45 / 36%); }
+.nova-donation-dialog-head { position: relative; gap: 6px; padding: 22px 60px 18px 22px; border-bottom: 1px solid var(--nova-line); background: #fff; text-align: left; }
+.nova-donation-dialog-title { color: var(--nova-ink); font-family: var(--nova-font); font-size: clamp(1.35rem, 3vw, 1.7rem); font-weight: 800; letter-spacing: -.035em; }
+.nova-donation-dialog-description { color: var(--nova-muted); font-size: .875rem; line-height: 1.45; }
+.nova-donation-dialog-close { position: absolute; top: 15px; right: 15px; min-height: 36px; border: 1px solid var(--nova-line); border-radius: 6px; padding: 0 10px; background: #fff; color: var(--nova-ink); font: inherit; font-size: .75rem; font-weight: 750; cursor: pointer; }
+.nova-donation-dialog-close:hover { border-color: var(--nova-red); color: var(--nova-red); }
+.nova-donation-frame-shell { min-height: 0; overflow: auto; overscroll-behavior: contain; background: #fff; }
+.nova-donation-frame { display: block; width: 100%; min-height: 520px; border: 0; transition: height .18s ease; }
+.nova-donation-fallback { margin: 0; border-top: 1px solid var(--nova-line); padding: 13px 22px 15px; background: #f6f8fa; color: var(--nova-muted); font-size: .75rem; line-height: 1.45; }
+.nova-donation-fallback a { color: var(--nova-red); font-weight: 750; text-decoration: underline; text-underline-offset: 3px; }
 
 /* Home */
 .nova-home-hero { position: relative; min-height: min(700px, calc(100svh - 76px)); display: grid; align-items: center; overflow: hidden; background: var(--nova-blue); color: #fff; }
@@ -684,6 +702,8 @@ body { min-width: 320px; background: var(--nova-paper); color: var(--nova-ink); 
 .nova-home-hero-content > div { max-width: 680px; }
 .nova-home-hero h1 { max-width: 720px; color: #fff; font-size: clamp(3rem, 6.7vw, 6.35rem); }
 .nova-hero-lead { max-width: 550px; margin: 25px 0 0; color: rgb(255 255 255 / 90%); font-size: clamp(1rem, 1.45vw, 1.1875rem); line-height: 1.65; }
+.nova-hero-status { display: inline-flex; margin: 20px 0 0; border: 1px solid rgb(255 255 255 / 35%); border-radius: 999px; padding: 8px 12px; background: rgb(255 255 255 / 10%); color: #fff; font-size: .78rem; font-weight: 750; letter-spacing: .02em; }
+.nova-hero-note { max-width: 545px; margin: 12px 0 0; color: rgb(255 255 255 / 76%); font-size: .875rem; line-height: 1.5; }
 .nova-hero-actions { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 32px; }
 .nova-category-section { padding-block: clamp(70px, 9vw, 116px); }
 .nova-category-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; }
@@ -766,6 +786,14 @@ body { min-width: 320px; background: var(--nova-paper); color: var(--nova-ink); 
 .nova-association-intro { display: grid; grid-template-columns: minmax(0, .9fr) minmax(330px, .8fr); gap: clamp(38px, 10vw, 150px); padding-block: clamp(72px, 9vw, 116px); }
 .nova-association-intro h2 { max-width: 550px; font-size: clamp(2.15rem, 4.2vw, 4rem); }
 .nova-association-intro > div:last-child p { margin: 0 0 15px; color: var(--nova-muted); font-size: 1rem; line-height: 1.7; }
+.nova-team-section { display: grid; grid-template-columns: minmax(0, 1fr) minmax(300px, .9fr); gap: clamp(34px, 9vw, 140px); align-items: end; padding-block: 38px clamp(68px, 9vw, 110px); border-top: 1px solid var(--nova-line); }
+.nova-team-section h2 { max-width: 650px; margin: 0; color: var(--nova-ink); font-family: var(--nova-font); font-size: clamp(2rem, 4vw, 3.7rem); font-weight: 800; letter-spacing: -.045em; line-height: 1.03; }
+.nova-team-section > div > p { max-width: 610px; margin: 17px 0 0; color: var(--nova-muted); font-size: 1rem; line-height: 1.65; }
+.nova-team-list { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+.nova-team-member { min-height: 158px; padding: 19px; border-radius: 9px; background: var(--nova-blue); color: #fff; }
+.nova-team-member span { color: var(--nova-sun); font-size: .72rem; font-weight: 800; letter-spacing: .08em; }
+.nova-team-member h3 { margin: 29px 0 0; color: #fff; font-family: var(--nova-font); font-size: 1.65rem; font-weight: 800; letter-spacing: -.035em; }
+.nova-team-member p { margin: 5px 0 0; color: rgb(255 255 255 / 72%); font-size: .8rem; }
 .nova-pillar-section { padding-bottom: clamp(72px, 9vw, 116px); }
 .nova-pillar-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
 .nova-pillar { min-height: 235px; padding: 25px; background: #fff; border-radius: 10px; box-shadow: 0 7px 18px rgb(20 43 74 / 7%); }
@@ -811,7 +839,7 @@ body { min-width: 320px; background: var(--nova-paper); color: var(--nova-ink); 
 
 /* Footer */
 .nova-footer { background: #102947; color: #fff; }
-.nova-footer-grid { display: grid; grid-template-columns: minmax(0, 1.1fr) minmax(260px, .8fr) auto; gap: 45px; align-items: end; padding-block: 52px; }
+.nova-footer-grid { display: grid; grid-template-columns: minmax(0, 1.1fr) minmax(220px, .75fr) minmax(120px, .45fr) auto; gap: 32px; align-items: end; padding-block: 52px; }
 .nova-footer-brand { margin: 0; color: var(--nova-sun); font-size: 1.15rem; font-weight: 800; letter-spacing: -.025em; }
 .nova-footer-copy { max-width: 390px; margin: 14px 0 0; color: rgb(255 255 255 / 70%); font-size: .9375rem; line-height: 1.58; }
 .nova-footer-nav { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 9px 26px; }
@@ -819,12 +847,68 @@ body { min-width: 320px; background: var(--nova-paper); color: var(--nova-ink); 
 .nova-footer-nav a:hover, .nova-footer-meta a:hover { color: var(--nova-sun); }
 .nova-footer-meta { display: grid; justify-items: end; gap: 11px; text-align: right; white-space: nowrap; }
 .nova-footer-meta a { color: var(--nova-sun); font-weight: 700; }
+.nova-footer-contacts { display: grid; gap: 9px; align-content: end; }
+.nova-footer-contacts a { color: rgb(255 255 255 / 82%); font-size: .875rem; }
+.nova-footer-contacts a:hover { color: var(--nova-sun); }
+
+/* Equipage content settings */
+.admin-settings-panel { display: grid; gap: 12px; }
+.admin-settings-panel-heading { display: flex; justify-content: space-between; gap: 24px; align-items: flex-start; padding: clamp(21px, 3vw, 31px); border-radius: 9px; background: var(--blue); color: #fff; }
+.admin-settings-panel-heading .eyebrow { margin: 0; color: var(--yellow); font-size: .62rem; font-weight: 900; letter-spacing: .12em; text-transform: uppercase; }
+.admin-settings-panel-heading h2 { max-width: 630px; margin: 9px 0 0; color: #fff; font-family: var(--display); font-size: clamp(1.8rem, 3.4vw, 3rem); letter-spacing: -.06em; line-height: .9; text-transform: uppercase; }
+.admin-settings-panel-heading p:not(.eyebrow) { max-width: 630px; margin: 13px 0 0; color: rgb(255 255 255 / 76%); font-size: .9rem; line-height: 1.55; }
+.admin-settings-panel-heading .admin-submit { flex: 0 0 auto; margin-top: 4px; background: var(--yellow); color: var(--blue); }
+.admin-settings-section { overflow: clip; border: 1px solid #d8e0eb; border-radius: 9px; background: #fff; box-shadow: 0 5px 18px rgb(19 38 75 / 4%); }
+.admin-settings-section > summary { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 18px; align-items: center; min-height: 74px; padding: 17px 21px; color: var(--blue); cursor: pointer; list-style: none; }
+.admin-settings-section > summary::-webkit-details-marker { display: none; }
+.admin-settings-section > summary::after { content: "+"; grid-column: 2; grid-row: 1 / span 2; width: 28px; height: 28px; display: grid; place-items: center; border: 1px solid #cbd5e2; border-radius: 999px; color: var(--red); font-size: 1.25rem; font-weight: 700; transition: transform .2s ease; }
+.admin-settings-section[open] > summary::after { transform: rotate(45deg); }
+.admin-settings-section > summary > span { font-size: 1rem; font-weight: 900; letter-spacing: .02em; }
+.admin-settings-section > summary > small { grid-column: 1; color: var(--muted); font-size: .78rem; line-height: 1.45; }
+.admin-settings-section-content { display: grid; gap: 21px; padding: 0 21px 23px; border-top: 1px solid #e8edf3; }
+.admin-settings-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; }
+.admin-settings-field { display: grid; gap: 6px; min-width: 0; color: var(--blue); font-size: .72rem; font-weight: 900; letter-spacing: .035em; }
+.admin-settings-field.is-wide { grid-column: 1 / -1; }
+.admin-settings-field input, .admin-settings-field textarea, .admin-settings-field select { width: 100%; min-width: 0; border: 1px solid #c9d2df; border-radius: 5px; outline: none; background: #fff; color: var(--ink); font-family: inherit; font-size: .9rem; font-weight: 400; letter-spacing: normal; }
+.admin-settings-field input, .admin-settings-field select { min-height: 42px; padding: 9px 10px; }
+.admin-settings-field textarea { min-height: 104px; padding: 10px; line-height: 1.5; resize: vertical; }
+.admin-settings-field input:focus, .admin-settings-field textarea:focus, .admin-settings-field select:focus { border-color: var(--red); box-shadow: 0 0 0 3px rgb(231 0 62 / 12%); }
+.admin-settings-field small { color: var(--muted); font-size: .69rem; font-weight: 500; letter-spacing: normal; line-height: 1.4; }
+.admin-settings-actions-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; }
+.admin-settings-action, .admin-settings-list-fieldset { min-width: 0; margin: 0; border: 1px solid #dae2ec; border-radius: 7px; padding: 16px; }
+.admin-settings-action legend, .admin-settings-list-fieldset legend { padding: 0 5px; color: var(--blue); font-size: .72rem; font-weight: 900; letter-spacing: .055em; text-transform: uppercase; }
+.admin-settings-list-fieldset > p { margin: 0 0 13px; color: var(--muted); font-size: .79rem; line-height: 1.45; }
+.admin-settings-list { display: grid; gap: 12px; }
+.admin-settings-list-item { display: grid; gap: 12px; padding: 13px; border-radius: 6px; background: #f6f8fb; }
+.admin-settings-remove, .admin-settings-add { width: fit-content; min-height: 33px; border: 1px solid #c9d2df; border-radius: 999px; padding: 7px 10px; background: #fff; color: var(--blue); font-size: .62rem; font-weight: 900; letter-spacing: .05em; text-transform: uppercase; cursor: pointer; }
+.admin-settings-remove { color: var(--red); }
+.admin-settings-add { margin-top: 13px; }
+.admin-settings-remove:disabled, .admin-settings-add:disabled { cursor: not-allowed; opacity: .45; }
+.admin-settings-save-bottom { display: flex; justify-content: flex-end; padding: 6px 0 12px; }
+.admin-settings-dirty { margin: 0; border-left: 4px solid var(--yellow); padding: 12px 15px; background: #fff8dc; color: #6b5100; font-size: .88rem; line-height: 1.45; }
+
+/* Equipage login */
+.admin-login-page { display: grid; min-height: 100svh; place-items: center; padding: 24px; background: radial-gradient(circle at 76% 10%, rgb(231 0 62 / 14%), transparent 31%), #f3f5f8; color: var(--ink); }
+.admin-login-card { width: min(100%, 510px); padding: clamp(30px, 6vw, 58px); border-radius: 12px; background: #fff; box-shadow: 0 24px 70px rgb(19 38 75 / 16%); }
+.admin-login-brand { display: inline-flex; gap: 8px; align-items: center; margin-bottom: 44px; color: var(--blue); font-family: var(--display); font-size: 1.25rem; font-weight: 900; letter-spacing: -.04em; }
+.admin-login-brand span { display: grid; width: 37px; height: 37px; place-items: center; border-radius: 50%; background: var(--red); color: #fff; font-size: .86rem; letter-spacing: -.03em; }
+.admin-login-card .eyebrow { margin: 0; color: var(--red); font-size: .66rem; font-weight: 900; letter-spacing: .1em; text-transform: uppercase; }
+.admin-login-card h1 { margin: 10px 0 0; color: var(--blue); font-family: var(--display); font-size: clamp(2.7rem, 8vw, 4.5rem); letter-spacing: -.07em; line-height: .84; text-transform: uppercase; }
+.admin-login-card > p:not(.eyebrow) { max-width: 410px; margin: 20px 0 0; color: var(--muted); font-size: .95rem; line-height: 1.6; }
+.admin-login-form { display: grid; gap: 17px; margin-top: 30px; }
+.admin-login-form label { display: grid; gap: 7px; color: var(--blue); font-size: .72rem; font-weight: 900; letter-spacing: .04em; }
+.admin-login-form input { width: 100%; min-height: 47px; border: 1px solid #c9d2df; border-radius: 6px; padding: 10px 12px; outline: none; background: #fff; color: var(--ink); font: inherit; }
+.admin-login-form input:focus { border-color: var(--red); box-shadow: 0 0 0 3px rgb(231 0 62 / 12%); }
+.admin-login-error { margin: 0; border-left: 4px solid var(--red); padding: 10px 12px; background: #fff0f2; color: #7c1936; font-size: .84rem; line-height: 1.4; }
+.admin-login-form .admin-submit { width: 100%; margin-top: 5px; }
+.admin-login-card > .admin-public-link { display: inline-block; margin-top: 29px; }
 
 /* Repair admin tablet layout too */
 @media (max-width: 880px) {
   .admin-topbar { flex-direction: column; gap: 20px; }
   .admin-topbar-actions { width: 100%; justify-content: space-between; }
   .admin-panel-grid { grid-template-columns: 1fr; }
+  .admin-settings-panel-heading { flex-direction: column; }
 }
 
 @media (max-width: 1120px) {
@@ -839,7 +923,7 @@ body { min-width: 320px; background: var(--nova-paper); color: var(--nova-ink); 
 
 @media (max-width: 920px) {
   .nova-category-grid { grid-template-columns: repeat(2, 1fr); }
-  .nova-progress-grid, .nova-home-support-grid, .nova-page-intro-grid, .nova-association-intro, .nova-support-page-grid { grid-template-columns: 1fr; }
+  .nova-progress-grid, .nova-home-support-grid, .nova-page-intro-grid, .nova-association-intro, .nova-team-section, .nova-support-page-grid { grid-template-columns: 1fr; }
   .nova-page-intro-grid { gap: 25px; }
   .nova-page-lead { max-width: 650px; }
   .nova-split-section { grid-template-columns: 1fr; }
@@ -852,6 +936,7 @@ body { min-width: 320px; background: var(--nova-paper); color: var(--nova-ink); 
   .nova-gallery-empty { grid-template-columns: 1fr; }
   .nova-association-status-grid { align-items: flex-start; flex-direction: column; }
   .nova-footer-grid { grid-template-columns: 1fr 1fr; }
+  .nova-footer-contacts { grid-column: 2; }
   .nova-footer-meta { justify-items: start; text-align: left; }
 }
 
@@ -868,8 +953,9 @@ body { min-width: 320px; background: var(--nova-paper); color: var(--nova-ink); 
   .nova-home-hero h1 { font-size: clamp(2.65rem, 13vw, 4.35rem); line-height: .98; }
   .nova-hero-lead { font-size: 1rem; }
   .nova-hero-actions { display: grid; grid-template-columns: 1fr; }
+  .nova-action-pair { display: grid; grid-template-columns: 1fr; gap: 14px; }
   .nova-button { width: 100%; }
-  .nova-category-grid, .nova-news-grid, .nova-format-grid, .nova-event-news-grid, .nova-pillar-grid { grid-template-columns: 1fr; }
+  .nova-category-grid, .nova-news-grid, .nova-format-grid, .nova-event-news-grid, .nova-pillar-grid, .nova-team-list { grid-template-columns: 1fr; }
   .nova-category-card { min-height: 180px; }
   .nova-section-heading-row { align-items: flex-start; flex-direction: column; }
   .nova-progress-item { grid-template-columns: 1fr; gap: 7px; }
@@ -887,8 +973,12 @@ body { min-width: 320px; background: var(--nova-paper); color: var(--nova-ink); 
   .nova-gallery-item, .nova-gallery-item.is-featured { grid-column: auto; grid-row: auto; min-height: 300px; }
   .nova-gallery-empty { padding: 18px; }
   .nova-footer-grid { grid-template-columns: 1fr; gap: 28px; padding-block: 38px; }
+  .nova-footer-contacts { grid-column: auto; }
   .nova-footer-nav { gap: 10px 20px; }
   .nova-footer-meta { white-space: normal; }
+  [data-slot="dialog-content"].nova-donation-dialog { width: min(calc(100vw - 16px), 34rem); max-height: calc(100dvh - 16px); }
+  .nova-donation-dialog-head { padding: 18px 58px 15px 18px; }
+  .nova-donation-fallback { padding-inline: 18px; }
   .nova-article { padding-block: 50px 70px; }
   .nova-article-heading { margin-top: 38px; }
   .nova-article-body { margin-top: 38px; }
@@ -897,9 +987,42 @@ body { min-width: 320px; background: var(--nova-paper); color: var(--nova-ink); 
   .loader-copy { right: 24px; bottom: 12%; }
   .loader-road { bottom: calc(21% - 70px); }
   .loader-car { width: 132px; }
+  .admin-settings-section > summary { grid-template-columns: minmax(0, 1fr) 30px; padding: 16px; }
+  .admin-settings-section-content { padding: 0 16px 18px; }
+  .admin-settings-grid, .admin-settings-actions-grid { grid-template-columns: 1fr; }
+  .admin-settings-field.is-wide { grid-column: auto; }
+  .admin-settings-panel-heading { padding: 20px; }
+  .admin-settings-save-bottom .admin-submit, .admin-settings-panel-heading .admin-submit { width: 100%; }
+  .admin-topbar-actions { flex-wrap: wrap; }
+  .admin-user { width: 100%; order: 3; }
+  .admin-list-item, .admin-link-entry { grid-template-columns: 1fr; align-items: start; }
+  .admin-link-entry-actions { flex-wrap: wrap; }
 }
+
+/* Last-mile accessibility and resilient motion. Content remains visible when
+   JavaScript is unavailable, then reveals once the browser is ready. */
+.nova-skip-link { position: fixed; z-index: 1001; top: 10px; left: 10px; transform: translateY(-180%); border-radius: 7px; padding: 10px 13px; background: var(--nova-red); color: #fff; font-size: .875rem; font-weight: 750; transition: transform .18s ease; }
+.nova-skip-link:focus { transform: translateY(0); }
+.nova-menu-button { cursor: pointer; }
+:where(a, button, input, textarea, select, summary):focus-visible { outline: 3px solid rgb(220 23 69 / 50%); outline-offset: 3px; }
+.nova-brand, .nova-nav a, .nova-mobile-menu a, .nova-category-card, .nova-news-card h3, .nova-footer-nav a, .nova-footer-contacts a { overflow-wrap: anywhere; }
+.motion-reveal { opacity: 1; transform: none; }
+.motion-ready .motion-reveal { opacity: 0; transform: translateY(18px); }
+.motion-ready .motion-reveal.is-visible { opacity: 1; transform: translateY(0); }
+
+@media (max-width: 1120px) {
+  .nova-mobile-menu.is-open { max-height: calc(100dvh - 68px); overflow-y: auto; overscroll-behavior: contain; animation: nova-menu-enter .2s ease both; }
+  .nova-mobile-menu a { min-width: 0; overflow-wrap: anywhere; }
+}
+
+@media (min-width: 621px) and (max-width: 920px) {
+  .nova-news-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+
+@keyframes nova-menu-enter { from { transform: translateY(-7px); } to { transform: translateY(0); } }
 
 @media (prefers-reduced-motion: reduce) {
   .nova-category-card, .nova-button, .nova-support-link, .nova-gallery-item img { transition: none; }
   .loader-car, .loader-road-line { animation: none; }
+  .motion-reveal, .motion-ready .motion-reveal, .motion-ready .motion-reveal.is-visible { opacity: 1; transform: none; }
 }

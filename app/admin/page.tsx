@@ -1,13 +1,20 @@
-import { requireChatGPTUser } from "@/app/chatgpt-auth";
-import { getAdminContent } from "@/lib/content-repository";
+import Link from "next/link";
+import { requireAdminUser } from "@/lib/admin-auth";
+import {
+  ensureCmsStarterContent,
+  getAdminContent,
+  getSiteSettings,
+} from "@/lib/content-repository";
 import { AdminDashboard } from "./admin-dashboard";
 
 export const dynamic = "force-dynamic";
 
 export default async function AdminPage() {
-  const [user, content] = await Promise.all([
-    requireChatGPTUser("/admin"),
+  const user = await requireAdminUser("/admin");
+  await ensureCmsStarterContent();
+  const [content, settings] = await Promise.all([
     getAdminContent(),
+    getSiteSettings(),
   ]);
 
   return (
@@ -19,12 +26,13 @@ export default async function AdminPage() {
             <h1>Le tableau de bord.</h1>
           </div>
           <div className="admin-topbar-actions">
-            <a className="admin-public-link" href="/">
+            <Link className="admin-public-link" href="/">
               Voir le site
-            </a>
-            <span className="admin-user" title={user.email}>
-              Connecté·e : {user.displayName}
-            </span>
+            </Link>
+            <span className="admin-user">Connecté : {user.displayName}</span>
+            <form action="/api/admin/auth/logout" method="post">
+              <button className="admin-logout" type="submit">Se déconnecter</button>
+            </form>
           </div>
         </div>
         <AdminDashboard
@@ -32,6 +40,7 @@ export default async function AdminPage() {
           initialMedia={content.media}
           initialUpdates={content.updates}
           initialSupportLinks={content.supportLinks}
+          initialSettings={settings}
         />
       </div>
     </main>

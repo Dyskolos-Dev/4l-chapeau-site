@@ -1,5 +1,6 @@
 import { spawnSync } from "node:child_process";
 import { fileURLToPath } from "node:url";
+import { prepareLocalD1 } from "./prepare-local-d1.mjs";
 import { readExecutionProfile } from "./execution-profile.mjs";
 
 const [command, ...args] = process.argv.slice(2);
@@ -13,6 +14,8 @@ if (managedLinux && command === "build") {
   if (result.error) throw result.error;
   process.exit(result.status ?? 1);
 }
+
+if (command === "dev") prepareLocalD1();
 
 // Import in this process so the preview owner retains its PID and signals.
 const cli = new URL(managedLinux

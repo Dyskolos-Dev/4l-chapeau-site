@@ -20,7 +20,7 @@ export function SupportLinks({
 
   return (
     <div className={cn("nova-support-links", compact && "is-compact", className)}>
-      {links.map((link, index) => (
+      {links.map((link) => (
         <a
           className="nova-support-link"
           href={link.url}
@@ -28,7 +28,7 @@ export function SupportLinks({
           rel="noopener noreferrer"
           target="_blank"
         >
-          <span className="nova-support-provider">{index === 0 ? providerLabel[link.provider] : "Soutenir"}</span>
+          <span className="nova-support-provider">{providerLabel[link.provider]}</span>
           <span className="nova-support-label">{link.label}</span>
         </a>
       ))}

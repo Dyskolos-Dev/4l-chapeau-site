@@ -1,44 +1,48 @@
 import { MotionReveal, RouteProgress } from "@/components/site/motion";
+import { DonationTrigger } from "@/components/site/donation-dialog";
 import { PageIntro } from "@/components/site/page-intro";
 import { SiteFooter } from "@/components/site/site-footer";
 import { SiteHeader } from "@/components/site/site-header";
 import { SupportLinks } from "@/components/site/support-links";
-import { getPublishedSupportLinks } from "@/lib/content-repository";
+import { getPublishedSupportLinks, getSiteSettings } from "@/lib/content-repository";
 
 export const dynamic = "force-dynamic";
 
-const waysToHelp = [
-  ["Soutenir", "Participer au financement de la préparation, des kilomètres et du matériel."],
-  ["Devenir partenaire", "Associer votre entreprise ou votre projet à une aventure sportive et solidaire."],
-  ["Faire connaître", "Partager les actualités, venir aux rendez-vous et relayer l’association autour de vous."],
-];
-
 export default async function SupportPage() {
-  const supportLinks = await getPublishedSupportLinks();
+  const [settings, supportLinks] = await Promise.all([
+    getSiteSettings(),
+    getPublishedSupportLinks(),
+  ]);
+  const support = settings.support;
 
   return (
-    <main className="nova-site">
+    <main className="nova-site" id="main-content">
       <RouteProgress />
-      <SiteHeader />
+      <SiteHeader
+        associationName={settings.identity.associationName}
+        brandMark={settings.branding.mark}
+        navigationLabels={settings.navigation}
+      />
       <PageIntro
-        eyebrow="Nous soutenir"
-        title="Chaque coup de pouce fait avancer l’aventure."
-        lead="Les contributions financières, les partenaires, les conseils et les relais permettent à 4L CHAPEAU de préparer ses projets dans de bonnes conditions."
+        eyebrow={support.eyebrow}
+        title={support.title}
+        lead={support.lead}
       />
 
       <section className="nova-support-page-section">
         <div className="nova-container nova-support-page-grid">
           <MotionReveal>
-            <p className="nova-eyebrow nova-eyebrow-light">Participer au projet</p>
-            <h2>Choisissez la manière qui vous ressemble.</h2>
-            <p>Les liens officiels ajoutés par l’équipage apparaissent ci-contre. Ils peuvent être activés ou masqués depuis l’administration.</p>
+            <p className="nova-eyebrow nova-eyebrow-light">{support.participationEyebrow}</p>
+            <h2>{support.participationTitle}</h2>
+            <p>{support.participationLead}</p>
+            <DonationTrigger className="nova-button nova-button-light nova-support-donation-cta" />
           </MotionReveal>
           <MotionReveal delay={90}>
             {supportLinks.length ? (
               <SupportLinks links={supportLinks} />
             ) : (
               <div className="nova-empty-panel nova-empty-panel-dark">
-                Les boutons de soutien sont en préparation. Vous pouvez déjà suivre l’association et prendre contact via les prochaines actualités.
+                {support.emptyState}
               </div>
             )}
           </MotionReveal>
@@ -47,20 +51,20 @@ export default async function SupportPage() {
 
       <section className="nova-container nova-help-section">
         <div className="nova-section-heading">
-          <p className="nova-eyebrow">Trois façons d’aider</p>
-          <h2>Une place pour chaque soutien.</h2>
+          <p className="nova-eyebrow">{support.waysEyebrow}</p>
+          <h2>{support.waysTitle}</h2>
         </div>
         <div className="nova-format-grid">
-          {waysToHelp.map(([title, text], index) => (
-            <MotionReveal className="nova-format-card" delay={index * 70} key={title}>
+          {support.ways.map((way, index) => (
+            <MotionReveal className="nova-format-card" delay={index * 70} key={`${index}-${way.title}`}>
               <span>{String(index + 1).padStart(2, "0")}</span>
-              <h3>{title}</h3>
-              <p>{text}</p>
+              <h3>{way.title}</h3>
+              <p>{way.text}</p>
             </MotionReveal>
           ))}
         </div>
         <MotionReveal className="nova-support-bottom" delay={120}>
-          <a className="nova-button nova-button-primary" href="/actualites">Suivre les actualités</a>
+          <a className="nova-button nova-button-primary" href={support.newsAction.href}>{support.newsAction.label}</a>
         </MotionReveal>
       </section>
       <SiteFooter />

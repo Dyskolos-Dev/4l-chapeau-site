@@ -1,0 +1,39 @@
+name: 4l-chapeau
+
+services:
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: 4l-chapeau:latest
+    ports:
+      - "${HOST_PORT:-8787}:8787"
+    environment:
+      NODE_ENV: ${NODE_ENV:-production}
+      PORT: "8787"
+      ADMIN_BAPTISTE_PASSWORD_FILE: /run/secrets/admin_baptiste_password
+      ADMIN_MAXENCE_PASSWORD_FILE: /run/secrets/admin_maxence_password
+    secrets:
+      - admin_baptiste_password
+      - admin_maxence_password
+    volumes:
+      - 4l_chapeau_data:/var/lib/4l-chapeau
+    init: true
+    read_only: true
+    tmpfs:
+      - /tmp:mode=1777
+    security_opt:
+      - no-new-privileges:true
+    cap_drop:
+      - ALL
+    restart: unless-stopped
+    stop_grace_period: 20s
+
+volumes:
+  4l_chapeau_data:
+
+secrets:
+  admin_baptiste_password:
+    file: ${ADMIN_BAPTISTE_PASSWORD_FILE_PATH:-./secrets/admin_baptiste_password.txt}
+  admin_maxence_password:
+    file: ${ADMIN_MAXENCE_PASSWORD_FILE_PATH:-./secrets/admin_maxence_password.txt}

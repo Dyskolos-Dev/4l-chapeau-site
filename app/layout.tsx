@@ -1,34 +1,50 @@
 import type { Metadata } from "next";
+import { DonationDialogProvider } from "@/components/site/donation-dialog";
 import { SiteLoader } from "@/components/site/site-loader";
+import { getSiteSettings } from "@/lib/content-repository";
 import "./globals.css";
 
-export const metadata: Metadata = {
-  title: {
-    default: "4L CHAPEAU · Association sportive & solidaire",
-    template: "%s · 4L CHAPEAU",
-  },
-  description:
-    "4L CHAPEAU fait rouler une Renault 4L entre préparation, 4L Trophy, événements sportifs et projets solidaires.",
-  themeColor: "#183b67",
-  other: {
-    "codex-preview": "development",
-  },
-  icons: {
-    icon: "/favicon.svg",
-    shortcut: "/favicon.svg",
-  },
-};
+export async function generateMetadata(): Promise<Metadata> {
+  const settings = await getSiteSettings();
+  const { associationName, city, team, targetEvent, targetYear } = settings.identity;
+  const teamNames = team.map((member) => member.name).join(" & ");
+  const fallbackTitle = `${associationName} · ${targetEvent} ${targetYear}`;
+  const fallbackDescription = `${associationName} : ${teamNames} préparent ${targetEvent} ${targetYear} depuis ${city} et cherchent leur future Renault 4L.`;
 
-export default function RootLayout({
+  return {
+    title: {
+      default: settings.seo.title || fallbackTitle,
+      template: `%s · ${associationName}`,
+    },
+    description: settings.seo.description || fallbackDescription,
+    themeColor: "#183b67",
+    other: {
+      "codex-preview": "development",
+    },
+    icons: {
+      icon: "/favicon.svg",
+      shortcut: "/favicon.svg",
+    },
+  };
+}
+
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const settings = await getSiteSettings();
+
   return (
     <html lang="fr">
       <body className="antialiased">
-        <SiteLoader />
-        {children}
+        <SiteLoader
+          associationName={settings.identity.associationName}
+          message={settings.branding.loaderMessage}
+        />
+        <DonationDialogProvider donation={settings.support.donation}>
+          {children}
+        </DonationDialogProvider>
       </body>
     </html>
   );

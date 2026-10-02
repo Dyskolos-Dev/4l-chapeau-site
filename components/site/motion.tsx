@@ -2,6 +2,7 @@
 
 import {
   useEffect,
+  useLayoutEffect,
   useRef,
   useState,
   type CSSProperties,
@@ -21,9 +22,15 @@ export function MotionReveal({
   const ref = useRef<HTMLDivElement>(null);
   const [isVisible, setIsVisible] = useState(false);
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     const element = ref.current;
-    if (!element) return;
+    const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    if (!element || reducedMotion || !("IntersectionObserver" in window)) {
+      setIsVisible(true);
+      return;
+    }
+
+    document.documentElement.classList.add("motion-ready");
 
     const observer = new IntersectionObserver(
       ([entry]) => {

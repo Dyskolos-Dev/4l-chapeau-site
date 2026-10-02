@@ -5,6 +5,22 @@ function textValue(value: unknown, limit = 3000): string {
   return typeof value === "string" ? value.trim().slice(0, limit) : "";
 }
 
+function mediaIdValue(value: unknown): string | null | undefined {
+  if (value === null) return null;
+  if (typeof value !== "string") return undefined;
+  const id = value.trim();
+  if (!id) return null;
+  return id.length <= 100 ? id : undefined;
+}
+
+async function mediaExists(id: string): Promise<boolean> {
+  const media = await getD1()
+    .prepare("SELECT id FROM media WHERE id = ? LIMIT 1")
+    .bind(id)
+    .first<{ id: string }>();
+  return Boolean(media);
+}
+
 const allowedStatuses = new Set(["complete", "current", "upcoming"]);
 
 export async function POST(request: Request) {
@@ -21,10 +37,24 @@ export async function POST(request: Request) {
       ? requestedStatus
       : "upcoming";
     const requestedPosition = Number(payload.position);
+    const imageMediaId =
+      payload.imageMediaId === undefined ? null : mediaIdValue(payload.imageMediaId);
 
     if (!period || !title) {
       return Response.json(
         { error: "La période et le titre sont requis." },
+        { status: 400 },
+      );
+    }
+    if (imageMediaId === undefined) {
+      return Response.json(
+        { error: "L’image associée à cette avancée est invalide." },
+        { status: 400 },
+      );
+    }
+    if (imageMediaId && !(await mediaExists(imageMediaId))) {
+      return Response.json(
+        { error: "L’image associée à cette avancée n’existe plus." },
         { status: 400 },
       );
     }
@@ -40,9 +70,9 @@ export async function POST(request: Request) {
         `INSERT INTO project_updates (
           id, period, title, summary, status, position,
           image_media_id, created_at, updated_at
-        ) VALUES (?, ?, ?, ?, ?, ?, NULL, ?, ?)`,
+        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`,
       )
-      .bind(id, period, title, summary, status, position, now, now)
+      .bind(id, period, title, summary, status, position, imageMediaId, now, now)
       .run();
 
     return Response.json(
@@ -54,7 +84,7 @@ export async function POST(request: Request) {
           summary,
           status,
           position,
-          imageMediaId: null,
+          imageMediaId,
           createdAt: now,
           updatedAt: now,
           author: user.displayName,

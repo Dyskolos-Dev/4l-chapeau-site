@@ -15,6 +15,13 @@
       "when": 1790930281165,
       "tag": "0001_illegal_turbo",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "6",
+      "when": 1790937230298,
+      "tag": "0002_good_ultragirl",
+      "breakpoints": true
     }
   ]
 }

@@ -1,0 +1,5 @@
+# Copier ce fichier vers .dev.vars pour lancer l’espace équipage localement.
+# Ne mettez jamais de vrais mots de passe dans ce fichier versionné.
+ADMIN_BAPTISTE_PASSWORD="replace-with-baptiste-password"
+ADMIN_MAXENCE_PASSWORD="replace-with-maxence-password"
+NODE_ENV="development"

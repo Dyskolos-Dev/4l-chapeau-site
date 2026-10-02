@@ -1,4 +1,5 @@
-import { index, integer, sqliteTable, text } from "drizzle-orm/sqlite-core";
+import { sql } from "drizzle-orm";
+import { check, index, integer, sqliteTable, text } from "drizzle-orm/sqlite-core";
 
 export const articles = sqliteTable(
   "articles",
@@ -70,5 +71,23 @@ export const supportLinks = sqliteTable(
       table.isActive,
       table.position,
     ),
+  ],
+);
+
+/**
+ * A single, versionable document for the public-facing copy and crew details.
+ * Record-based content (articles, updates, media and support links) stays in
+ * its own tables above.
+ */
+export const siteSettings = sqliteTable(
+  "site_settings",
+  {
+    id: integer("id").primaryKey(),
+    content: text("content").notNull(),
+    updatedAt: text("updated_at").notNull(),
+    updatedBy: text("updated_by").notNull().default(""),
+  },
+  (table) => [
+    check("site_settings_singleton", sql`${table.id} = 1`),
   ],
 );

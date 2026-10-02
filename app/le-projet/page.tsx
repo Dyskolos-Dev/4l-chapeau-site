@@ -3,48 +3,73 @@ import { PageIntro } from "@/components/site/page-intro";
 import { SiteFooter } from "@/components/site/site-footer";
 import { SiteHeader } from "@/components/site/site-header";
 import { starterUpdates } from "@/lib/content";
-import { getPublishedUpdates } from "@/lib/content-repository";
+import { getPublishedUpdates, getSiteSettings } from "@/lib/content-repository";
 
 export const dynamic = "force-dynamic";
 
-const pillars = [
-  ["Préparer", "Remettre la 4L en forme, apprendre à l’entretenir et prendre la route avec confiance."],
-  ["Participer", "Vivre le 4L Trophy et d’autres événements sportifs qui donnent une vraie place à l’aventure."],
-  ["Partager", "Faire connaître les coulisses du projet, les rencontres et les progrès de toute l’équipe."],
-];
-
 export default async function AssociationPage() {
-  const storedUpdates = await getPublishedUpdates();
+  const [settings, storedUpdates] = await Promise.all([
+    getSiteSettings(),
+    getPublishedUpdates(),
+  ]);
   const updates = storedUpdates.length ? storedUpdates : starterUpdates;
+  const association = settings.association;
+  const progressTitle = association.progressTitleTemplate.replace(
+    "{count}",
+    String(updates.length),
+  );
+  const teamHeading = settings.identity.teamHeadingTemplate
+    .replaceAll("{team}", settings.identity.team.map((member) => member.name).join(" & "))
+    .replaceAll("{city}", settings.identity.city);
 
   return (
-    <main className="nova-site">
+    <main className="nova-site" id="main-content">
       <RouteProgress />
-      <SiteHeader />
+      <SiteHeader
+        associationName={settings.identity.associationName}
+        brandMark={settings.branding.mark}
+        navigationLabels={settings.navigation}
+      />
       <PageIntro
-        eyebrow="L’association"
-        title="4L CHAPEAU, une aventure mécanique et humaine."
-        lead="Notre association rassemble une équipe autour d’une Renault 4L, du 4L Trophy et de rendez-vous où le sport, l’entraide et les rencontres comptent autant que les kilomètres."
+        eyebrow={association.eyebrow}
+        title={association.title}
+        lead={association.lead}
       />
 
       <section className="nova-container nova-association-intro">
         <MotionReveal>
-          <p className="nova-eyebrow">Notre idée</p>
-          <h2>Une voiture simple, un projet qui rassemble.</h2>
+          <p className="nova-eyebrow">{association.ideaEyebrow}</p>
+          <h2>{association.ideaTitle}</h2>
         </MotionReveal>
         <MotionReveal delay={90}>
-          <p>La 4L est notre point de départ. Elle nous pousse à apprendre, à organiser, à chercher des soutiens et à partager le chemin avec les personnes qui suivent le projet.</p>
-          <p>Notre site sert à présenter l’association, suivre la préparation et donner une place claire à chaque rendez-vous de l’équipe.</p>
+          {association.paragraphs.map((paragraph, index) => <p key={`${index}-${paragraph}`}>{paragraph}</p>)}
         </MotionReveal>
+      </section>
+
+      <section className="nova-container nova-team-section">
+        <MotionReveal>
+          <p className="nova-eyebrow">{settings.identity.targetEvent} {settings.identity.targetYear}</p>
+          <h2>{teamHeading}</h2>
+          <p>{settings.identity.vehicleSearchNote}</p>
+        </MotionReveal>
+        <div className="nova-team-list">
+          {settings.identity.team.map((member, index) => (
+            <MotionReveal className="nova-team-member" delay={index * 70} key={`${index}-${member.name}`}>
+              <span>{String(index + 1).padStart(2, "0")}</span>
+              <h3>{member.name}</h3>
+              <p>{member.role}</p>
+            </MotionReveal>
+          ))}
+        </div>
       </section>
 
       <section className="nova-container nova-pillar-section">
         <div className="nova-pillar-grid">
-          {pillars.map(([title, text], index) => (
-            <MotionReveal className="nova-pillar" delay={index * 80} key={title}>
+          {association.pillars.map((pillar, index) => (
+            <MotionReveal className="nova-pillar" delay={index * 80} key={`${index}-${pillar.title}`}>
               <span>{String(index + 1).padStart(2, "0")}</span>
-              <h3>{title}</h3>
-              <p>{text}</p>
+              <h3>{pillar.title}</h3>
+              <p>{pillar.text}</p>
             </MotionReveal>
           ))}
         </div>
@@ -53,13 +78,13 @@ export default async function AssociationPage() {
       <section className="nova-association-status">
         <div className="nova-container nova-association-status-grid">
           <MotionReveal>
-            <p className="nova-eyebrow nova-eyebrow-light">Le projet avance</p>
-            <h2>{updates.length} étapes déjà suivies.</h2>
-            <p>La préparation est mise à jour depuis l’espace équipage, pour garder le site utile et fidèle à la réalité du projet.</p>
+            <p className="nova-eyebrow nova-eyebrow-light">{association.progressEyebrow}</p>
+            <h2>{progressTitle}</h2>
+            <p>{association.progressLead}</p>
           </MotionReveal>
           <MotionReveal delay={80} className="nova-association-actions">
-            <a className="nova-button nova-button-light" href="/4l-trophy">Suivre le 4L Trophy</a>
-            <a className="nova-button nova-button-outline-light" href="/evenements">Voir les événements</a>
+            <a className="nova-button nova-button-light" href={association.trophyAction.href}>{association.trophyAction.label}</a>
+            <a className="nova-button nova-button-outline-light" href={association.eventsAction.href}>{association.eventsAction.label}</a>
           </MotionReveal>
         </div>
       </section>

@@ -2,21 +2,29 @@ import { MotionReveal, RouteProgress } from "@/components/site/motion";
 import { PageIntro } from "@/components/site/page-intro";
 import { SiteFooter } from "@/components/site/site-footer";
 import { SiteHeader } from "@/components/site/site-header";
-import { getPublicMedia } from "@/lib/content-repository";
+import { getPublicMedia, getSiteSettings } from "@/lib/content-repository";
 
 export const dynamic = "force-dynamic";
 
 export default async function GalleryPage() {
-  const media = await getPublicMedia(60);
+  const [settings, media] = await Promise.all([
+    getSiteSettings(),
+    getPublicMedia(60),
+  ]);
+  const gallery = settings.gallery;
 
   return (
-    <main className="nova-site">
+    <main className="nova-site" id="main-content">
       <RouteProgress />
-      <SiteHeader />
+      <SiteHeader
+        associationName={settings.identity.associationName}
+        brandMark={settings.branding.mark}
+        navigationLabels={settings.navigation}
+      />
       <PageIntro
-        eyebrow="Galerie"
-        title="Les images de la route, de l’atelier et de l’équipe."
-        lead="Cette galerie est alimentée directement depuis l’espace équipage. Les photos importées apparaissent ici sans avoir à modifier le site."
+        eyebrow={gallery.eyebrow}
+        title={gallery.title}
+        lead={gallery.lead}
       />
 
       <section className="nova-container nova-gallery-section">
@@ -39,9 +47,9 @@ export default async function GalleryPage() {
           <MotionReveal className="nova-gallery-empty">
             <img src="/images/4l-chapeau-hero-day.png" alt="La 4L de l’association sur une piste" />
             <div>
-              <p className="nova-eyebrow">La galerie arrive</p>
-              <h2>Les prochaines images seront publiées ici.</h2>
-              <p>Ajoutez vos photos depuis l’espace équipage : elles rejoindront automatiquement cette page.</p>
+              <p className="nova-eyebrow">{gallery.emptyEyebrow}</p>
+              <h2>{gallery.emptyTitle}</h2>
+              <p>{gallery.emptyLead}</p>
             </div>
           </MotionReveal>
         )}
