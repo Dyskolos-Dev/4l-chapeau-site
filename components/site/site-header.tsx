@@ -1,6 +1,5 @@
 "use client";
 
-import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 import { cn } from "@/lib/utils";
@@ -39,27 +38,27 @@ export function SiteHeader() {
   return (
     <header className="nova-header">
       <div className="nova-header-inner">
-        <Link className="nova-brand" href="/" onClick={() => setIsOpen(false)}>
+        <a className="nova-brand" href="/" onClick={() => setIsOpen(false)}>
           <span className="nova-brand-mark">4L</span>
           <span>CHAPEAU</span>
-        </Link>
+        </a>
 
         <nav className="nova-nav" aria-label="Navigation principale">
           {navigation.map((item) => (
-            <Link
+            <a
               className={cn(pathname === item.href && "is-active")}
               href={item.href}
               key={item.href}
             >
               {item.label}
-            </Link>
+            </a>
           ))}
         </nav>
 
         <div className="nova-header-actions">
-          <Link className="nova-support-cta" href="/soutenir">
+          <a className="nova-support-cta" href="/soutenir">
             Nous soutenir
-          </Link>
+          </a>
           <button
             className={cn("nova-menu-button", isOpen && "is-open")}
             type="button"
@@ -80,13 +79,13 @@ export function SiteHeader() {
         aria-label="Navigation mobile"
       >
         {navigation.map((item) => (
-          <Link href={item.href} key={item.href} onClick={() => setIsOpen(false)}>
+          <a href={item.href} key={item.href} onClick={() => setIsOpen(false)}>
             {item.label}
-          </Link>
+          </a>
         ))}
-        <Link className="nova-mobile-support" href="/soutenir" onClick={() => setIsOpen(false)}>
+        <a className="nova-mobile-support" href="/soutenir" onClick={() => setIsOpen(false)}>
           Soutenir l’aventure
-        </Link>
+        </a>
       </nav>
     </header>
   );

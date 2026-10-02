@@ -1,4 +1,3 @@
-import Link from "next/link";
 import { MotionReveal, RouteProgress } from "@/components/site/motion";
 import { PageIntro } from "@/components/site/page-intro";
 import { SiteFooter } from "@/components/site/site-footer";
@@ -59,7 +58,7 @@ export default async function NewsPage() {
                       </time>
                       <h3>{article.title}</h3>
                       <span>{article.excerpt}</span>
-                      <Link href={`/actualites/${article.slug}`}>Lire l’article</Link>
+                      <a href={`/actualites/${article.slug}`}>Lire l’article</a>
                     </MotionReveal>
                   ))}
                 </div>

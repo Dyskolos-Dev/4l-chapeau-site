@@ -1,4 +1,3 @@
-import Link from "next/link";
 import { MotionReveal, RouteProgress } from "@/components/site/motion";
 import { PageIntro } from "@/components/site/page-intro";
 import { SiteFooter } from "@/components/site/site-footer";
@@ -59,8 +58,8 @@ export default async function AssociationPage() {
             <p>La préparation est mise à jour depuis l’espace équipage, pour garder le site utile et fidèle à la réalité du projet.</p>
           </MotionReveal>
           <MotionReveal delay={80} className="nova-association-actions">
-            <Link className="nova-button nova-button-light" href="/4l-trophy">Suivre le 4L Trophy</Link>
-            <Link className="nova-button nova-button-outline-light" href="/evenements">Voir les événements</Link>
+            <a className="nova-button nova-button-light" href="/4l-trophy">Suivre le 4L Trophy</a>
+            <a className="nova-button nova-button-outline-light" href="/evenements">Voir les événements</a>
           </MotionReveal>
         </div>
       </section>

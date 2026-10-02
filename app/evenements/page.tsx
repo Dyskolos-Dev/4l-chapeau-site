@@ -1,4 +1,3 @@
-import Link from "next/link";
 import { MotionReveal, RouteProgress } from "@/components/site/motion";
 import { PageIntro } from "@/components/site/page-intro";
 import { SiteFooter } from "@/components/site/site-footer";
@@ -54,7 +53,7 @@ export default async function EventsPage() {
               <p className="nova-eyebrow nova-eyebrow-light">Rendez-vous annoncés</p>
               <h2>Les prochaines dates.</h2>
             </div>
-            <Link className="nova-text-link nova-text-link-light" href="/actualites">Toutes les actualités</Link>
+            <a className="nova-text-link nova-text-link-light" href="/actualites">Toutes les actualités</a>
           </div>
           {eventNews.length ? (
             <div className="nova-event-news-grid">
@@ -62,7 +61,7 @@ export default async function EventsPage() {
                 <MotionReveal className="nova-event-news-card" key={article.id}>
                   <h3>{article.title}</h3>
                   <p>{article.excerpt}</p>
-                  <Link href={`/actualites/${article.slug}`}>Voir le rendez-vous</Link>
+                  <a href={`/actualites/${article.slug}`}>Voir le rendez-vous</a>
                 </MotionReveal>
               ))}
             </div>

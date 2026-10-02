@@ -1,4 +1,3 @@
-import Link from "next/link";
 import { notFound } from "next/navigation";
 import { MotionReveal, RouteProgress } from "@/components/site/motion";
 import { SiteFooter } from "@/components/site/site-footer";
@@ -35,7 +34,7 @@ export default async function ArticlePage({
       <SiteHeader />
       <article className="nova-container nova-article">
         <MotionReveal className="nova-article-meta">
-          <Link href="/actualites">Toutes les actualités</Link>
+          <a href="/actualites">Toutes les actualités</a>
           <span>{normalizeArticleCategory(article.category)}</span>
           <time dateTime={article.publishedAt ?? article.createdAt}>
             {formatDate(article.publishedAt ?? article.createdAt)}
@@ -49,8 +48,8 @@ export default async function ArticlePage({
           {paragraphs.map((paragraph, index) => <p key={`${article.id}-${index}`}>{paragraph}</p>)}
         </MotionReveal>
         <MotionReveal className="nova-article-footer" delay={100}>
-          <Link className="nova-button nova-button-secondary" href="/actualites">Revenir aux actualités</Link>
-          <Link className="nova-text-link" href="/4l-trophy">Suivre le projet 4L Trophy</Link>
+          <a className="nova-button nova-button-secondary" href="/actualites">Revenir aux actualités</a>
+          <a className="nova-text-link" href="/4l-trophy">Suivre le projet 4L Trophy</a>
         </MotionReveal>
       </article>
       <SiteFooter />

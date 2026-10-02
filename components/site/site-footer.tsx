@@ -1,5 +1,3 @@
-import Link from "next/link";
-
 export function SiteFooter() {
   return (
     <footer className="nova-footer">
@@ -11,16 +9,16 @@ export function SiteFooter() {
           </p>
         </div>
         <nav className="nova-footer-nav" aria-label="Navigation pied de page">
-          <Link href="/le-projet">L’association</Link>
-          <Link href="/4l-trophy">4L Trophy</Link>
-          <Link href="/evenements">Événements</Link>
-          <Link href="/actualites">Actualités</Link>
-          <Link href="/galerie">Galerie</Link>
-          <Link href="/soutenir">Soutenir</Link>
+          <a href="/le-projet">L’association</a>
+          <a href="/4l-trophy">4L Trophy</a>
+          <a href="/evenements">Événements</a>
+          <a href="/actualites">Actualités</a>
+          <a href="/galerie">Galerie</a>
+          <a href="/soutenir">Soutenir</a>
         </nav>
         <div className="nova-footer-meta">
           <span>© {new Date().getFullYear()} 4L CHAPEAU</span>
-          <Link href="/admin">Espace équipage</Link>
+          <a href="/admin">Espace équipage</a>
         </div>
       </div>
     </footer>

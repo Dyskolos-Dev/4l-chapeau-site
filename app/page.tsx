@@ -1,4 +1,3 @@
-import Link from "next/link";
 import { MotionReveal, RouteProgress } from "@/components/site/motion";
 import { SiteFooter } from "@/components/site/site-footer";
 import { SiteHeader } from "@/components/site/site-header";
@@ -71,8 +70,8 @@ export default async function Home() {
               4L CHAPEAU prépare son équipage pour le 4L Trophy et fait vivre d’autres événements autour de la route, du sport et de la solidarité.
             </p>
             <div className="nova-hero-actions">
-              <Link className="nova-button nova-button-primary" href="/4l-trophy">Découvrir le projet</Link>
-              <Link className="nova-button nova-button-ghost" href="/soutenir">Soutenir l’aventure</Link>
+              <a className="nova-button nova-button-primary" href="/4l-trophy">Découvrir le projet</a>
+              <a className="nova-button nova-button-ghost" href="/soutenir">Soutenir l’aventure</a>
             </div>
           </MotionReveal>
         </div>
@@ -86,11 +85,11 @@ export default async function Home() {
           </div>
           <div className="nova-category-grid">
             {categories.map((category) => (
-              <Link className="nova-category-card" href={category.href} key={category.label}>
+              <a className="nova-category-card" href={category.href} key={category.label}>
                 <span>{category.label}</span>
                 <p>{category.text}</p>
                 <strong>Voir la rubrique</strong>
-              </Link>
+              </a>
             ))}
           </div>
         </div>
@@ -102,7 +101,7 @@ export default async function Home() {
             <p className="nova-eyebrow nova-eyebrow-light">En ce moment</p>
             <h2>{currentUpdate?.title ?? "La préparation est en route."}</h2>
             <p>{currentUpdate?.summary ?? "Suivez les avancées de l’équipage, étape après étape."}</p>
-            <Link className="nova-text-link nova-text-link-light" href="/4l-trophy">Voir la préparation</Link>
+            <a className="nova-text-link nova-text-link-light" href="/4l-trophy">Voir la préparation</a>
           </MotionReveal>
           <div className="nova-progress-list">
             {updates.slice(-3).map((update) => (
@@ -124,7 +123,7 @@ export default async function Home() {
             <p className="nova-eyebrow">Actualités</p>
             <h2>Le journal de l’équipage.</h2>
           </div>
-          <Link className="nova-text-link" href="/actualites">Toutes les actualités</Link>
+          <a className="nova-text-link" href="/actualites">Toutes les actualités</a>
         </div>
         <div className="nova-news-grid">
           {articles.map((article) => (
@@ -135,7 +134,7 @@ export default async function Home() {
               </time>
               <h3>{article.title}</h3>
               <span>{article.excerpt}</span>
-              <Link href={`/actualites/${article.slug}`}>Lire l’article</Link>
+              <a href={`/actualites/${article.slug}`}>Lire l’article</a>
             </MotionReveal>
           ))}
         </div>
@@ -147,7 +146,7 @@ export default async function Home() {
             <p className="nova-eyebrow">Nous soutenir</p>
             <h2>Les projets qui roulent ne se construisent jamais seuls.</h2>
             <p>Un don, un partenariat, une pièce ou un partage : chaque aide compte pour l’équipe.</p>
-            <Link className="nova-button nova-button-primary" href="/soutenir">Voir les possibilités</Link>
+            <a className="nova-button nova-button-primary" href="/soutenir">Voir les possibilités</a>
           </MotionReveal>
           <MotionReveal delay={100}>
             {supportLinks.length ? (
@@ -156,7 +155,7 @@ export default async function Home() {
               <div className="nova-support-note">
                 <strong>Vous souhaitez nous accompagner ?</strong>
                 <p>Les liens de soutien seront publiés ici par l’équipage. En attendant, découvrez comment prendre contact.</p>
-                <Link className="nova-text-link" href="/soutenir">Contacter l’association</Link>
+                <a className="nova-text-link" href="/soutenir">Contacter l’association</a>
               </div>
             )}
           </MotionReveal>

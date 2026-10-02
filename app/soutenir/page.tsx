@@ -1,4 +1,3 @@
-import Link from "next/link";
 import { MotionReveal, RouteProgress } from "@/components/site/motion";
 import { PageIntro } from "@/components/site/page-intro";
 import { SiteFooter } from "@/components/site/site-footer";
@@ -61,7 +60,7 @@ export default async function SupportPage() {
           ))}
         </div>
         <MotionReveal className="nova-support-bottom" delay={120}>
-          <Link className="nova-button nova-button-primary" href="/actualites">Suivre les actualités</Link>
+          <a className="nova-button nova-button-primary" href="/actualites">Suivre les actualités</a>
         </MotionReveal>
       </section>
       <SiteFooter />

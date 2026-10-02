@@ -626,7 +626,7 @@ body { min-width: 320px; background: var(--nova-paper); color: var(--nova-ink); 
 .route-progress span { background: var(--nova-red); }
 
 /* Arrival */
-.site-loader { position: fixed; z-index: 1000; inset: 0; display: block; overflow: hidden; background: #fff; color: var(--nova-ink); transition: opacity .35s ease, visibility .35s ease; }
+.site-loader { position: fixed; z-index: 1000; inset: 0; display: block; overflow: hidden; pointer-events: none; background: #fff; color: var(--nova-ink); transition: opacity .35s ease, visibility .35s ease; }
 .site-loader::before { inset: auto 0 18%; width: 100%; height: 1px; opacity: 1; background: var(--nova-ink); background-image: none; content: ""; }
 .site-loader-leaving { pointer-events: none; opacity: 0; visibility: hidden; }
 .loader-title { top: 18%; left: max(24px, 7vw); z-index: 2; color: var(--nova-ink); font-family: var(--nova-font); font-size: clamp(1.125rem, 2.2vw, 1.75rem); font-weight: 800; letter-spacing: -.035em; }

@@ -1,4 +1,3 @@
-import Link from "next/link";
 import { MotionReveal, RouteProgress } from "@/components/site/motion";
 import { PageIntro } from "@/components/site/page-intro";
 import { SiteFooter } from "@/components/site/site-footer";
@@ -45,7 +44,7 @@ export default async function TrophyPage() {
           <p className="nova-eyebrow">Notre préparation</p>
           <h2>Le départ se prépare bien avant la ligne de départ.</h2>
           <p>La mécanique, la sécurité, l’équipement et les soutiens se préparent un à un. Cette page rassemble les avancées du projet 4L Trophy.</p>
-          <Link className="nova-button nova-button-primary" href="/soutenir">Accompagner l’équipage</Link>
+          <a className="nova-button nova-button-primary" href="/soutenir">Accompagner l’équipage</a>
         </MotionReveal>
       </section>
 
@@ -77,7 +76,7 @@ export default async function TrophyPage() {
             <p className="nova-eyebrow">Journal de préparation</p>
             <h2>Les dernières nouvelles.</h2>
           </div>
-          <Link className="nova-text-link" href="/actualites">Voir toutes les actualités</Link>
+          <a className="nova-text-link" href="/actualites">Voir toutes les actualités</a>
         </div>
         {projectNotes.length ? (
           <div className="nova-news-grid">
@@ -86,7 +85,7 @@ export default async function TrophyPage() {
                 <p>{normalizeArticleCategory(article.category)}</p>
                 <h3>{article.title}</h3>
                 <span>{article.excerpt}</span>
-                <Link href={`/actualites/${article.slug}`}>Lire l’article</Link>
+                <a href={`/actualites/${article.slug}`}>Lire l’article</a>
               </MotionReveal>
             ))}
           </div>
