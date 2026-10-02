@@ -18,6 +18,11 @@ const runtimeServerRoot = path.join(runtimeWorkerRoot, "server");
 const runtimeClientRoot = path.join(runtimeWorkerRoot, "client");
 const runtimeConfig = path.join(runtimeServerRoot, "wrangler.json");
 const runtimeSecrets = path.join(runtimeServerRoot, ".dev.vars");
+const runtimeHome = process.env.HOME || path.join(runtimeRoot, "home");
+const xdgConfigHome = process.env.XDG_CONFIG_HOME || path.join(runtimeHome, ".config");
+const xdgDataHome = process.env.XDG_DATA_HOME || path.join(runtimeHome, ".local", "share");
+const xdgStateHome = process.env.XDG_STATE_HOME || path.join(runtimeHome, ".local", "state");
+const xdgCacheHome = process.env.XDG_CACHE_HOME || path.join(runtimeHome, ".cache");
 const workerCli = path.join(
   appRoot,
   "node_modules",
@@ -76,6 +81,21 @@ function validateRuntimeDirectory() {
   runtimeDirectoryReady = true;
 }
 
+function prepareWranglerDirectories() {
+  // The image runs with a read-only root filesystem. Wrangler otherwise falls
+  // back to the app user's /home/app/.config, which cannot be created there.
+  // Keep all of its ephemeral configuration under the writable /tmp mount.
+  for (const directory of [
+    runtimeHome,
+    xdgConfigHome,
+    xdgDataHome,
+    xdgStateHome,
+    xdgCacheHome,
+  ]) {
+    mkdirSync(directory, { recursive: true, mode: 0o700 });
+  }
+}
+
 function stageRuntimeConfig() {
   let config;
   try {
@@ -85,6 +105,7 @@ function stageRuntimeConfig() {
   }
 
   validateRuntimeDirectory();
+  prepareWranglerDirectories();
   const builtServer = path.join(appRoot, "dist", "server");
   const builtClient = path.join(appRoot, "dist", "client");
 
@@ -140,6 +161,11 @@ function cleanup() {
 function workerEnvironment() {
   return {
     ...process.env,
+    HOME: runtimeHome,
+    XDG_CONFIG_HOME: xdgConfigHome,
+    XDG_DATA_HOME: xdgDataHome,
+    XDG_STATE_HOME: xdgStateHome,
+    XDG_CACHE_HOME: xdgCacheHome,
     CI: "true",
     CLOUDFLARE_CF_FETCH_ENABLED: "false",
     WRANGLER_SEND_METRICS: "false",

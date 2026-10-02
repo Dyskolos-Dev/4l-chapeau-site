@@ -35,11 +35,15 @@ ENV NODE_ENV=production \
     MINIFLARE_REGISTRY_PATH=/tmp/wrangler/registry \
     WRANGLER_CACHE_DIR=/tmp/wrangler/cache \
     WRANGLER_DISABLE_CONFIG_WATCHING=true \
-    XDG_CACHE_HOME=/tmp/cache
+    HOME=/tmp/4l-chapeau-home \
+    XDG_CONFIG_HOME=/tmp/4l-chapeau-home/.config \
+    XDG_DATA_HOME=/tmp/4l-chapeau-home/.local/share \
+    XDG_STATE_HOME=/tmp/4l-chapeau-home/.local/state \
+    XDG_CACHE_HOME=/tmp/4l-chapeau-home/.cache
 
 RUN groupadd --system app && useradd --system --gid app --create-home app \
-    && mkdir -p /var/lib/4l-chapeau /tmp/wrangler /tmp/cache \
-    && chown -R app:app /app /var/lib/4l-chapeau /tmp/wrangler /tmp/cache
+    && mkdir -p /var/lib/4l-chapeau /tmp/wrangler /tmp/4l-chapeau-home \
+    && chown -R app:app /app /var/lib/4l-chapeau /tmp/wrangler /tmp/4l-chapeau-home
 
 # Keep only the generated Worker, its runtime dependencies and D1 migrations.
 # The build-only .openai metadata is deliberately not copied into this stage.
