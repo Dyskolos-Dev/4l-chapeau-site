@@ -52,3 +52,23 @@ export const media = sqliteTable(
   },
   (table) => [index("idx_media_created_at").on(table.createdAt)],
 );
+
+export const supportLinks = sqliteTable(
+  "support_links",
+  {
+    id: text("id").primaryKey(),
+    provider: text("provider").notNull().default("other"),
+    label: text("label").notNull(),
+    url: text("url").notNull(),
+    isActive: integer("is_active", { mode: "boolean" }).notNull().default(true),
+    position: integer("position").notNull().default(0),
+    createdAt: text("created_at").notNull(),
+    updatedAt: text("updated_at").notNull(),
+  },
+  (table) => [
+    index("idx_support_links_active_position").on(
+      table.isActive,
+      table.position,
+    ),
+  ],
+);

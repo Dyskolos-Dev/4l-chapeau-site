@@ -31,6 +31,7 @@ export default async function AdminPage() {
           initialArticles={content.articles}
           initialMedia={content.media}
           initialUpdates={content.updates}
+          initialSupportLinks={content.supportLinks}
         />
       </div>
     </main>

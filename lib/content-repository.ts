@@ -1,5 +1,11 @@
 import { getD1 } from "@/db";
-import type { Article, Media, ProjectUpdate } from "./content";
+import type {
+  Article,
+  Media,
+  ProjectUpdate,
+  SupportLink,
+  SupportProvider,
+} from "./content";
 
 type QueryResult<T> = { results?: T[] };
 
@@ -11,6 +17,19 @@ function contentUnavailable(error: unknown): boolean {
 async function selectRows<T>(statement: D1PreparedStatement): Promise<T[]> {
   const result = (await statement.all<T>()) as QueryResult<T>;
   return result.results ?? [];
+}
+
+type SupportLinkRow = Omit<SupportLink, "isActive" | "provider"> & {
+  isActive: number | boolean;
+  provider: string;
+};
+
+function supportLinkFromRow(row: SupportLinkRow): SupportLink {
+  const provider: SupportProvider =
+    row.provider === "helloasso" || row.provider === "tipeee"
+      ? row.provider
+      : "other";
+  return { ...row, provider, isActive: Boolean(row.isActive) };
 }
 
 export async function getPublishedArticles(limit = 3): Promise<Article[]> {
@@ -72,14 +91,68 @@ export async function getPublicMedia(limit = 12): Promise<Media[]> {
   }
 }
 
+async function getSupportLinks(activeOnly: boolean): Promise<SupportLink[]> {
+  try {
+    const statement = activeOnly
+      ? getD1()
+          .prepare(
+            `SELECT id, provider, label, url, is_active AS isActive, position,
+              created_at AS createdAt, updated_at AS updatedAt
+             FROM support_links
+             WHERE is_active = ?
+             ORDER BY position ASC, created_at ASC`,
+          )
+          .bind(1)
+      : getD1().prepare(
+          `SELECT id, provider, label, url, is_active AS isActive, position,
+            created_at AS createdAt, updated_at AS updatedAt
+           FROM support_links
+           ORDER BY position ASC, created_at ASC`,
+        );
+    const rows = await selectRows<SupportLinkRow>(statement);
+    return rows.map(supportLinkFromRow);
+  } catch (error) {
+    if (contentUnavailable(error)) return [];
+    throw error;
+  }
+}
+
+export function getPublishedSupportLinks(): Promise<SupportLink[]> {
+  return getSupportLinks(true);
+}
+
+export async function getPublishedArticleBySlug(
+  slug: string,
+): Promise<Article | null> {
+  try {
+    const articles = await selectRows<Article>(
+      getD1()
+        .prepare(
+          `SELECT id, slug, title, excerpt, content, category, status,
+            cover_media_id AS coverMediaId, published_at AS publishedAt,
+            created_at AS createdAt, updated_at AS updatedAt
+           FROM articles
+           WHERE status = ? AND slug = ?
+           LIMIT 1`,
+        )
+        .bind("published", slug),
+    );
+    return articles[0] ?? null;
+  } catch (error) {
+    if (contentUnavailable(error)) return null;
+    throw error;
+  }
+}
+
 export async function getAdminContent(): Promise<{
   articles: Article[];
   updates: ProjectUpdate[];
   media: Media[];
+  supportLinks: SupportLink[];
 }> {
   try {
     const db = getD1();
-    const [articles, updates, media] = await Promise.all([
+    const [articles, updates, media, supportLinks] = await Promise.all([
       selectRows<Article>(
         db.prepare(
           `SELECT id, slug, title, excerpt, content, category, status,
@@ -107,12 +180,13 @@ export async function getAdminContent(): Promise<{
            ORDER BY created_at DESC`,
         ),
       ),
+      getSupportLinks(false),
     ]);
 
-    return { articles, updates, media };
+    return { articles, updates, media, supportLinks };
   } catch (error) {
     if (contentUnavailable(error)) {
-      return { articles: [], updates: [], media: [] };
+      return { articles: [], updates: [], media: [], supportLinks: [] };
     }
     throw error;
   }

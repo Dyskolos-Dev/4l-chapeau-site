@@ -1,5 +1,6 @@
 export type ArticleStatus = "draft" | "published";
 export type UpdateStatus = "complete" | "current" | "upcoming";
+export type SupportProvider = "helloasso" | "tipeee" | "other";
 
 export type Article = {
   id: string;
@@ -35,6 +36,17 @@ export type Media = {
   altText: string;
   caption: string;
   createdAt: string;
+};
+
+export type SupportLink = {
+  id: string;
+  provider: SupportProvider;
+  label: string;
+  url: string;
+  isActive: boolean;
+  position: number;
+  createdAt: string;
+  updatedAt: string;
 };
 
 export const starterArticles: Article[] = [
