@@ -8,64 +8,60 @@ import { getPublishedSupportLinks } from "@/lib/content-repository";
 
 export const dynamic = "force-dynamic";
 
-const supportModes = [
-  ["01", "Un coup de pouce", "Aider à financer les kilomètres, le matériel et la préparation de l’équipage."],
-  ["02", "Un bon contact", "Mettre l’équipe en relation avec une entreprise, un média, un garage ou un passionné."],
-  ["03", "Une présence", "Suivre les nouvelles, partager l’aventure et venir nous voir lors des événements."],
+const waysToHelp = [
+  ["Soutenir", "Participer au financement de la préparation, des kilomètres et du matériel."],
+  ["Devenir partenaire", "Associer votre entreprise ou votre projet à une aventure sportive et solidaire."],
+  ["Faire connaître", "Partager les actualités, venir aux rendez-vous et relayer l’association autour de vous."],
 ];
 
 export default async function SupportPage() {
   const supportLinks = await getPublishedSupportLinks();
 
   return (
-    <main className="route-app route-support">
+    <main className="nova-site">
       <RouteProgress />
       <SiteHeader />
       <PageIntro
-        index="04 / SOUTENIR"
-        eyebrow="Chaque soutien donne un peu plus de portée au projet"
-        title="La 4L se conduit à deux. Le projet aussi."
-        lead="Un soutien peut prendre beaucoup de formes : un don, une rencontre, une pièce, un conseil ou simplement l’envie de faire connaître l’aventure."
+        eyebrow="Nous soutenir"
+        title="Chaque coup de pouce fait avancer l’aventure."
+        lead="Les contributions financières, les partenaires, les conseils et les relais permettent à 4L CHAPEAU de préparer ses projets dans de bonnes conditions."
       />
 
-      <section className="support-station route-frame">
-        <MotionReveal className="support-station-heading">
-          <p className="signal-label">BOUTONS DE SOUTIEN</p>
-          <h2>Choisissez votre façon de faire avancer le voyage.</h2>
-        </MotionReveal>
-        <MotionReveal className="support-station-links" delay={120}>
-          {supportLinks.length ? (
-            <SupportLinks links={supportLinks} />
-          ) : (
-            <div className="support-empty-station">
-              <span>EN PRÉPARATION</span>
-              <h3>Les liens de soutien seront publiés ici par l’équipage.</h3>
-              <p>Ils pourront être ajoutés ou désactivés depuis l’espace administration, sans modifier le site.</p>
-            </div>
-          )}
-        </MotionReveal>
+      <section className="nova-support-page-section">
+        <div className="nova-container nova-support-page-grid">
+          <MotionReveal>
+            <p className="nova-eyebrow nova-eyebrow-light">Participer au projet</p>
+            <h2>Choisissez la manière qui vous ressemble.</h2>
+            <p>Les liens officiels ajoutés par l’équipage apparaissent ci-contre. Ils peuvent être activés ou masqués depuis l’administration.</p>
+          </MotionReveal>
+          <MotionReveal delay={90}>
+            {supportLinks.length ? (
+              <SupportLinks links={supportLinks} />
+            ) : (
+              <div className="nova-empty-panel nova-empty-panel-dark">
+                Les boutons de soutien sont en préparation. Vous pouvez déjà suivre l’association et prendre contact via les prochaines actualités.
+              </div>
+            )}
+          </MotionReveal>
+        </div>
       </section>
 
-      <section className="support-modes route-frame">
-        <MotionReveal>
-          <p className="signal-label">IL N’Y A PAS QU’UNE SEULE FAÇON D’AIDER</p>
-        </MotionReveal>
-        <div className="support-mode-list">
-          {supportModes.map(([index, title, text], position) => (
-            <MotionReveal className="support-mode" delay={position * 100} key={index}>
-              <span>{index}</span>
+      <section className="nova-container nova-help-section">
+        <div className="nova-section-heading">
+          <p className="nova-eyebrow">Trois façons d’aider</p>
+          <h2>Une place pour chaque soutien.</h2>
+        </div>
+        <div className="nova-format-grid">
+          {waysToHelp.map(([title, text], index) => (
+            <MotionReveal className="nova-format-card" delay={index * 70} key={title}>
+              <span>{String(index + 1).padStart(2, "0")}</span>
               <h3>{title}</h3>
               <p>{text}</p>
             </MotionReveal>
           ))}
         </div>
-      </section>
-
-      <section className="support-final route-frame">
-        <MotionReveal>
-          <p className="signal-label">DÉJÀ CURIEUX ?</p>
-          <h2>Suivez les nouvelles<br />avant le prochain départ.</h2>
-          <Link className="route-button route-button-acid" href="/carnet">Ouvrir le carnet <span>↗</span></Link>
+        <MotionReveal className="nova-support-bottom" delay={120}>
+          <Link className="nova-button nova-button-primary" href="/actualites">Suivre les actualités</Link>
         </MotionReveal>
       </section>
       <SiteFooter />

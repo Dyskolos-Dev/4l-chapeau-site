@@ -19,7 +19,13 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 import { cn } from "@/lib/utils";
-import type { Article, Media, ProjectUpdate, SupportLink } from "@/lib/content";
+import {
+  articleCategoryOptions,
+  type Article,
+  type Media,
+  type ProjectUpdate,
+  type SupportLink,
+} from "@/lib/content";
 
 type Props = {
   initialArticles: Article[];
@@ -76,7 +82,7 @@ export function AdminDashboard({
       form.reset();
       setNotice(
         result.article.status === "published"
-          ? "L’article est en ligne sur le journal de bord."
+          ? "L’article est en ligne dans les actualités."
           : "L’article a été enregistré en brouillon.",
       );
     } catch (error) {
@@ -258,7 +264,11 @@ export function AdminDashboard({
                 </label>
                 <label>
                   Catégorie
-                  <input name="category" defaultValue="Journal de bord" maxLength={80} />
+                  <select name="category" defaultValue="Atelier & préparation">
+                    {articleCategoryOptions.map((category) => (
+                      <option key={category} value={category}>{category}</option>
+                    ))}
+                  </select>
                 </label>
                 <label>
                   Chapô

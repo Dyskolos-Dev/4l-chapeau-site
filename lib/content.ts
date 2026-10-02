@@ -2,6 +2,15 @@ export type ArticleStatus = "draft" | "published";
 export type UpdateStatus = "complete" | "current" | "upcoming";
 export type SupportProvider = "helloasso" | "tipeee" | "other";
 
+export const articleCategoryOptions = [
+  "4L Trophy",
+  "Atelier & préparation",
+  "Événements",
+  "Vie de l’association",
+] as const;
+
+export type ArticleCategory = (typeof articleCategoryOptions)[number];
+
 export type Article = {
   id: string;
   slug: string;
@@ -184,6 +193,23 @@ export function updateStatusLabel(status: UpdateStatus): string {
     current: "En cours",
     upcoming: "À venir",
   }[status];
+}
+
+export function normalizeArticleCategory(value: string): ArticleCategory {
+  const normalized = value.trim().toLocaleLowerCase("fr-FR");
+  if (normalized.includes("trophy")) return "4L Trophy";
+  if (normalized.includes("événement") || normalized.includes("evenement")) {
+    return "Événements";
+  }
+  if (
+    normalized.includes("atelier") ||
+    normalized.includes("préparation") ||
+    normalized.includes("preparation") ||
+    normalized.includes("essai")
+  ) {
+    return "Atelier & préparation";
+  }
+  return "Vie de l’association";
 }
 
 export function slugify(value: string): string {

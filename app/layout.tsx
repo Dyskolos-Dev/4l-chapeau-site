@@ -4,12 +4,12 @@ import "./globals.css";
 
 export const metadata: Metadata = {
   title: {
-    default: "4L CHAPEAU · Roadbook ouvert",
+    default: "4L CHAPEAU · Association sportive & solidaire",
     template: "%s · 4L CHAPEAU",
   },
   description:
-    "Le roadbook de 4L CHAPEAU : préparation de la 4L, 4L Trophy, événements sportifs et vie d’équipage.",
-  themeColor: "#0c0d14",
+    "4L CHAPEAU fait rouler une Renault 4L entre préparation, 4L Trophy, événements sportifs et projets solidaires.",
+  themeColor: "#183b67",
   other: {
     "codex-preview": "development",
   },

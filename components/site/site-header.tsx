@@ -2,53 +2,70 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { cn } from "@/lib/utils";
 
 const navigation = [
-  { href: "/le-projet", label: "Le projet", index: "01" },
-  { href: "/carnet", label: "Carnet", index: "02" },
-  { href: "/galerie", label: "Galerie", index: "03" },
-  { href: "/soutenir", label: "Soutenir", index: "04" },
+  { href: "/", label: "Accueil" },
+  { href: "/le-projet", label: "L’association" },
+  { href: "/4l-trophy", label: "4L Trophy" },
+  { href: "/evenements", label: "Événements" },
+  { href: "/actualites", label: "Actualités" },
+  { href: "/galerie", label: "Galerie" },
 ];
 
 export function SiteHeader() {
   const pathname = usePathname();
   const [isOpen, setIsOpen] = useState(false);
 
+  useEffect(() => {
+    setIsOpen(false);
+  }, [pathname]);
+
+  useEffect(() => {
+    const closeOnEscape = (event: KeyboardEvent) => {
+      if (event.key === "Escape") setIsOpen(false);
+    };
+
+    document.addEventListener("keydown", closeOnEscape);
+    document.body.style.overflow = isOpen ? "hidden" : "";
+
+    return () => {
+      document.removeEventListener("keydown", closeOnEscape);
+      document.body.style.overflow = "";
+    };
+  }, [isOpen]);
+
   return (
-    <header className="route-header">
-      <div className="route-header-inner">
-        <Link className="route-brand" href="/" onClick={() => setIsOpen(false)}>
-          <span className="route-brand-code">4L</span>
-          <span>
-            <b>CHAPEAU</b>
-            <small>Association route & entraide</small>
-          </span>
+    <header className="nova-header">
+      <div className="nova-header-inner">
+        <Link className="nova-brand" href="/" onClick={() => setIsOpen(false)}>
+          <span className="nova-brand-mark">4L</span>
+          <span>CHAPEAU</span>
         </Link>
 
-        <nav className="route-nav" aria-label="Navigation principale">
+        <nav className="nova-nav" aria-label="Navigation principale">
           {navigation.map((item) => (
             <Link
               className={cn(pathname === item.href && "is-active")}
               href={item.href}
               key={item.href}
             >
-              <i>{item.index}</i>
               {item.label}
             </Link>
           ))}
         </nav>
 
-        <div className="route-header-actions">
-          <Link className="route-header-support" href="/soutenir">
+        <div className="nova-header-actions">
+          <Link className="nova-support-cta" href="/soutenir">
             Nous soutenir
           </Link>
           <button
-            className={cn("route-menu-button", isOpen && "is-open")}
+            className={cn("nova-menu-button", isOpen && "is-open")}
             type="button"
             aria-label={isOpen ? "Fermer le menu" : "Ouvrir le menu"}
             aria-expanded={isOpen}
+            aria-controls="mobile-navigation"
             onClick={() => setIsOpen((open) => !open)}
           >
             <span />
@@ -57,18 +74,20 @@ export function SiteHeader() {
         </div>
       </div>
 
-      <div className={cn("route-mobile-nav", isOpen && "is-open")}>
-        <p>Choisir une étape</p>
+      <nav
+        className={cn("nova-mobile-menu", isOpen && "is-open")}
+        id="mobile-navigation"
+        aria-label="Navigation mobile"
+      >
         {navigation.map((item) => (
           <Link href={item.href} key={item.href} onClick={() => setIsOpen(false)}>
-            <span>{item.index}</span>
             {item.label}
           </Link>
         ))}
-        <Link className="mobile-home" href="/" onClick={() => setIsOpen(false)}>
-          Retour au départ <span>↗</span>
+        <Link className="nova-mobile-support" href="/soutenir" onClick={() => setIsOpen(false)}>
+          Soutenir l’aventure
         </Link>
-      </div>
+      </nav>
     </header>
   );
 }

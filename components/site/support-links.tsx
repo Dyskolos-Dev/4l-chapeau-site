@@ -4,7 +4,7 @@ import { cn } from "@/lib/utils";
 const providerLabel: Record<SupportLink["provider"], string> = {
   helloasso: "HelloAsso",
   tipeee: "Tipeee",
-  other: "Soutenir",
+  other: "Soutenir le projet",
 };
 
 export function SupportLinks({
@@ -19,19 +19,17 @@ export function SupportLinks({
   if (!links.length) return null;
 
   return (
-    <div className={cn("support-links", compact && "is-compact", className)}>
+    <div className={cn("nova-support-links", compact && "is-compact", className)}>
       {links.map((link, index) => (
         <a
-          className="support-link"
+          className="nova-support-link"
           href={link.url}
           key={link.id}
           rel="noopener noreferrer"
           target="_blank"
         >
-          <span className="support-link-index">0{index + 1}</span>
-          <span className="support-link-label">{link.label}</span>
-          <span className="support-link-provider">{providerLabel[link.provider]}</span>
-          <span className="support-link-arrow" aria-hidden="true">↗</span>
+          <span className="nova-support-provider">{index === 0 ? providerLabel[link.provider] : "Soutenir"}</span>
+          <span className="nova-support-label">{link.label}</span>
         </a>
       ))}
     </div>

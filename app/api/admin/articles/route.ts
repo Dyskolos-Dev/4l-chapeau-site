@@ -1,6 +1,10 @@
 import { getD1 } from "@/db";
 import { getAdminUser, jsonError } from "@/lib/admin-auth";
-import { slugify } from "@/lib/content";
+import {
+  articleCategoryOptions,
+  normalizeArticleCategory,
+  slugify,
+} from "@/lib/content";
 
 function textValue(value: unknown, limit = 6000): string {
   return typeof value === "string" ? value.trim().slice(0, limit) : "";
@@ -15,7 +19,12 @@ export async function POST(request: Request) {
     const title = textValue(payload.title, 140);
     const excerpt = textValue(payload.excerpt, 380);
     const content = textValue(payload.content, 12000);
-    const category = textValue(payload.category, 80) || "Journal de bord";
+    const requestedCategory = textValue(payload.category, 80);
+    const category = articleCategoryOptions.includes(
+      requestedCategory as (typeof articleCategoryOptions)[number],
+    )
+      ? requestedCategory
+      : normalizeArticleCategory(requestedCategory);
     const publish = payload.publish === true;
 
     if (!title) {
