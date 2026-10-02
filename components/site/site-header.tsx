@@ -1,6 +1,7 @@
 "use client";
 
-import Link from "next/link";
+/* eslint-disable @next/next/no-html-link-for-pages -- Vinext's Link shim blocks native navigation in this deployment. */
+
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 import { DonationTrigger } from "@/components/site/donation-dialog";
@@ -59,21 +60,21 @@ export function SiteHeader({
         Aller au contenu
       </a>
       <div className="nova-header-inner">
-        <Link className="nova-brand" href="/" onClick={closeMenu}>
+        <a className="nova-brand" href="/" onClick={closeMenu}>
           <span className="nova-brand-mark">{brandMark || "4L"}</span>
           <span>{associationName}</span>
-        </Link>
+        </a>
 
         <nav className="nova-nav" aria-label="Navigation principale">
           {navigation.map((item) => (
-            <Link
+            <a
               aria-current={isActive(item.href) ? "page" : undefined}
               className={cn(isActive(item.href) && "is-active")}
               href={item.href}
               key={item.href}
             >
               {item.label}
-            </Link>
+            </a>
           ))}
         </nav>
 
@@ -100,14 +101,14 @@ export function SiteHeader({
           aria-label="Navigation mobile"
         >
           {navigation.map((item) => (
-            <Link
+            <a
               aria-current={isActive(item.href) ? "page" : undefined}
               href={item.href}
               key={item.href}
               onClick={closeMenu}
             >
               {item.label}
-            </Link>
+            </a>
           ))}
           <DonationTrigger
             className="nova-mobile-support"

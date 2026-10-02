@@ -1,4 +1,5 @@
-import Link from "next/link";
+/* eslint-disable @next/next/no-html-link-for-pages -- Vinext's Link shim blocks native navigation in this deployment. */
+
 import { getSiteSettings } from "@/lib/content-repository";
 
 export async function SiteFooter() {
@@ -29,12 +30,12 @@ export async function SiteFooter() {
           </p>
         </div>
         <nav className="nova-footer-nav" aria-label="Navigation pied de page">
-          <Link href="/le-projet">{navigation.association}</Link>
-          <Link href="/4l-trophy">{navigation.trophy}</Link>
-          <Link href="/evenements">{navigation.events}</Link>
-          <Link href="/actualites">{navigation.news}</Link>
-          <Link href="/galerie">{navigation.gallery}</Link>
-          <Link href="/soutenir">{navigation.support}</Link>
+          <a href="/le-projet">{navigation.association}</a>
+          <a href="/4l-trophy">{navigation.trophy}</a>
+          <a href="/evenements">{navigation.events}</a>
+          <a href="/actualites">{navigation.news}</a>
+          <a href="/galerie">{navigation.gallery}</a>
+          <a href="/soutenir">{navigation.support}</a>
         </nav>
         {contacts.length ? (
           <nav className="nova-footer-contacts" aria-label="Nous contacter">
@@ -52,7 +53,7 @@ export async function SiteFooter() {
         ) : null}
         <div className="nova-footer-meta">
           <span>© {new Date().getFullYear()} {identity.associationName}</span>
-          <Link href="/admin">{footer.adminLabel}</Link>
+          <a href="/admin">{footer.adminLabel}</a>
         </div>
       </div>
     </footer>

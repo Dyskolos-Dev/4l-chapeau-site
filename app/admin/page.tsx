@@ -1,4 +1,5 @@
-import Link from "next/link";
+/* eslint-disable @next/next/no-html-link-for-pages -- Vinext's Link shim blocks native navigation in this deployment. */
+
 import { requireAdminUser } from "@/lib/admin-auth";
 import {
   ensureCmsStarterContent,
@@ -26,9 +27,9 @@ export default async function AdminPage() {
             <h1>Le tableau de bord.</h1>
           </div>
           <div className="admin-topbar-actions">
-            <Link className="admin-public-link" href="/">
+            <a className="admin-public-link" href="/">
               Voir le site
-            </Link>
+            </a>
             <span className="admin-user">Connecté : {user.displayName}</span>
             <form action="/api/admin/auth/logout" method="post">
               <button className="admin-logout" type="submit">Se déconnecter</button>

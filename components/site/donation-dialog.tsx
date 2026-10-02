@@ -2,7 +2,7 @@
 
 import {
   createContext,
-  type ButtonHTMLAttributes,
+  type AnchorHTMLAttributes,
   type ReactNode,
   useContext,
   useEffect,
@@ -25,6 +25,7 @@ type DonationSettings = SiteSettings["support"]["donation"];
 
 type DonationContextValue = {
   config: DonationSettings;
+  directUrl: string | null;
   isAvailable: boolean;
   openDonation: () => void;
 };
@@ -115,12 +116,13 @@ export function DonationDialogProvider({
   const contextValue = useMemo<DonationContextValue>(
     () => ({
       config: donation,
+      directUrl,
       isAvailable: Boolean(widgetUrl),
       openDonation: () => {
         if (widgetUrl) setIsOpen(true);
       },
     }),
-    [donation, widgetUrl],
+    [directUrl, donation, widgetUrl],
   );
 
   return (
@@ -170,8 +172,9 @@ export function DonationTrigger({
   children,
   className,
   fallbackHref = "/soutenir",
-  ...buttonProps
-}: Omit<ButtonHTMLAttributes<HTMLButtonElement>, "type"> & {
+  onClick,
+  ...anchorProps
+}: Omit<AnchorHTMLAttributes<HTMLAnchorElement>, "href"> & {
   fallbackHref?: string;
 }) {
   const donation = useContext(DonationContext);
@@ -179,24 +182,27 @@ export function DonationTrigger({
 
   if (!donation?.isAvailable) {
     return (
-      <a className={className} href={fallbackHref}>
+      <a {...anchorProps} className={className} href={fallbackHref} onClick={onClick}>
         {label}
       </a>
     );
   }
 
   return (
-    <button
-      {...buttonProps}
+    <a
+      {...anchorProps}
       aria-haspopup="dialog"
       className={cn("nova-donation-trigger", className)}
+      href={donation.directUrl ?? fallbackHref}
       onClick={(event) => {
-        buttonProps.onClick?.(event);
-        if (!event.defaultPrevented) donation.openDonation();
+        onClick?.(event);
+        if (!event.defaultPrevented) {
+          event.preventDefault();
+          donation.openDonation();
+        }
       }}
-      type="button"
     >
       {label}
-    </button>
+    </a>
   );
 }

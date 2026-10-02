@@ -1,4 +1,5 @@
-import Link from "next/link";
+/* eslint-disable @next/next/no-html-link-for-pages -- Vinext's Link shim blocks native navigation in this deployment. */
+
 import { redirect } from "next/navigation";
 import { getCurrentAdminUser, safeAdminReturnPath } from "@/lib/admin-auth";
 import { getSiteSettings } from "@/lib/content-repository";
@@ -23,16 +24,16 @@ export default async function AdminLoginPage({
   return (
     <main className="admin-login-page">
       <section className="admin-login-card">
-        <Link className="admin-login-brand" href="/" aria-label={`Retour à l’accueil ${settings.identity.associationName}`}>
+        <a className="admin-login-brand" href="/" aria-label={`Retour à l’accueil ${settings.identity.associationName}`}>
           <span>{settings.branding.mark || "4L"}</span> {settings.identity.associationName}
-        </Link>
+        </a>
         <p className="eyebrow">Portail équipage</p>
         <h1>On prend le volant&nbsp;?</h1>
         <p>
           Cet espace est réservé à {settings.identity.team.map((member) => member.name).join(" et ")} pour piloter les contenus de l’association.
         </p>
         <AdminLoginForm returnTo={returnTo} />
-        <Link className="admin-public-link" href="/">Retour au site</Link>
+        <a className="admin-public-link" href="/">Retour au site</a>
       </section>
     </main>
   );

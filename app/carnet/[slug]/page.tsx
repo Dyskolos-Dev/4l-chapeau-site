@@ -1,4 +1,5 @@
-import Link from "next/link";
+/* eslint-disable @next/next/no-html-link-for-pages -- Vinext's Link shim blocks native navigation in this deployment. */
+
 import { notFound } from "next/navigation";
 import { MotionReveal, RouteProgress } from "@/components/site/motion";
 import { LinkedMedia } from "@/components/site/linked-media";
@@ -48,7 +49,7 @@ export default async function ArticlePage({
       />
       <article className="nova-container nova-article">
         <MotionReveal className="nova-article-meta">
-          <Link href="/actualites">{settings.news.allArticlesActionLabel}</Link>
+          <a href="/actualites">{settings.news.allArticlesActionLabel}</a>
           <span>{normalizeArticleCategory(article.category)}</span>
           <time dateTime={article.publishedAt ?? article.createdAt}>
             {formatDate(article.publishedAt ?? article.createdAt)}
@@ -74,8 +75,8 @@ export default async function ArticlePage({
           {paragraphs.map((paragraph, index) => <p key={`${article.id}-${index}`}>{paragraph}</p>)}
         </MotionReveal>
         <MotionReveal className="nova-article-footer" delay={100}>
-          <Link className="nova-button nova-button-secondary" href="/actualites">{settings.news.articleBackLabel}</Link>
-          <Link className="nova-text-link" href={settings.news.articleProjectAction.href}>{settings.news.articleProjectAction.label}</Link>
+          <a className="nova-button nova-button-secondary" href="/actualites">{settings.news.articleBackLabel}</a>
+          <a className="nova-text-link" href={settings.news.articleProjectAction.href}>{settings.news.articleProjectAction.label}</a>
         </MotionReveal>
       </article>
       <SiteFooter />
